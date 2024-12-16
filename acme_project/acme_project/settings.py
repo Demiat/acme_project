@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'birthday.apps.BirthdayConfig',
     'pages.apps.PagesConfig',
+    'users.apps.UsersConfig',
     'django_bootstrap5',
     'django_cleanup.apps.CleanupConfig',
 ]
@@ -91,3 +92,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'smedia'
 MEDIA_URL = '/path/'
+
+AUTH_USER_MODEL = 'users.MyUser'
