@@ -18,6 +18,11 @@
           |
           <a href="{% url 'birthday:delete' birthday.id %}">Удалить запись</a>
         </div>
+        <div class="col-10">  
+          <div>
+            {{ birthday.first_name }} {{ birthday.last_name }} - {{ birthday.birthday }}<br>
+            <a href="{% url 'birthday:detail' birthday.id %}">Сколько до дня рождения?</a>
+          </div>
       </div>
       {% if not forloop.last %}
         <hr class="mt-3"> 
