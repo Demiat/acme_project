@@ -21,6 +21,19 @@
               Список дней рождения
             </a>
           </li>
+          <!-- Это блок ссылок для авторизованного пользователя -->
+          {% if user.is_authenticated %}
+          <span class="navbar-text">Привет, <b>{{ user.username }}</b>
+              <a href="{% url 'auth_logout' %}"><small>(Выйти)</small></a>
+          </span>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link {% if view_name in 'login, auth_logout' %} active {% endif %}" href="{% url 'login' %}">Войти</a>
+            </li>        
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link{% if view_name == 'registration' %} active {% endif %}" href="{% url 'registration' %}">Регистрация</a>
+          </li>
         </ul>
       {% endwith %}
     </div>

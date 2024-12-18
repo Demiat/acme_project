@@ -100,3 +100,9 @@ MEDIA_ROOT = BASE_DIR / 'smedia'
 MEDIA_URL = '/path/'
 
 AUTH_USER_MODEL = 'users.MyUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
+LOGIN_REDIRECT_URL = 'pages:homepage'
+LOGIN_URL = 'login'
