@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'django_bootstrap5',
     'django_cleanup.apps.CleanupConfig',
+    'users.apps.UserConfig',
 ]
 
 MIDDLEWARE = [
