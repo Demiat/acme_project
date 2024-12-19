@@ -5,3 +5,4 @@ from django.db import models
 
 class MyUser(AbstractUser):
     bio = models.TextField('Биография', blank=True)
+    email = models.EmailField()

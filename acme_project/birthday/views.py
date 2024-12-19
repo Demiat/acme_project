@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.views.generic import (
     DetailView, CreateView, ListView, UpdateView, DeleteView
@@ -8,6 +9,7 @@ from django.urls import reverse_lazy
 from .models import Birthday
 from .forms import BirthdayForm
 from .utils import calculate_birthday_countdown
+from users.mixins import OnlyAuthorMixin
 
 
 class BirthdayMixin:
@@ -31,6 +33,14 @@ class BirthdayDetailView(DetailView):
             # Дату рождения берём из объекта в словаре context:
             self.object.birthday
         )
+        # Записываем в переменную form пустой объект формы.
+        context['form'] = CongratulationForm()
+        # Запрашиваем все поздравления для выбранного дня рождения.
+        context['congratulations'] = (
+            # Дополнительно подгружаем авторов комментариев,
+            # чтобы избежать множества запросов к БД.
+            self.object.congratulations.select_related('author')
+        )
         # Возвращаем словарь контекста.
         return context
 
@@ -44,15 +54,19 @@ class BirthdayListView(ListView):
     paginate_by = 3
 
 
-class BirthdayUpdateView(BirthdayMixin, BirthdayFormMixin, UpdateView):
+class BirthdayUpdateView(OnlyAuthorMixin, BirthdayMixin, BirthdayFormMixin, UpdateView):
     pass
 
 
-class BirthdayCreateView(BirthdayMixin, BirthdayFormMixin, CreateView):
-    pass
+class BirthdayCreateView(LoginRequiredMixin, BirthdayMixin, BirthdayFormMixin, CreateView):
+    def form_valid(self, form):
+        # Присвоить полю author объект пользователя из запроса.
+        form.instance.author = self.request.user
+        # Продолжить валидацию, описанную в форме.
+        return super().form_valid(form) 
 
 
-class BirthdayDeleteView(BirthdayMixin, DeleteView):
+class BirthdayDeleteView(OnlyAuthorMixin, BirthdayMixin, DeleteView):
     success_url = reverse_lazy('birthday:list')
 
 

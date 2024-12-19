@@ -1,18 +1,13 @@
-from django.urls import include, path, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.urls import include, path
 from django.contrib.auth.views import LogoutView
 
-from .forms import CustomUserCreationForm
+from .views import RegisterUserView
 
 
 urlpatterns = [
     path(
         'registration/',
-        CreateView.as_view(
-            template_name='registration/registration_form.html',
-            form_class=CustomUserCreationForm,
-            success_url=reverse_lazy('pages:homepage'),
-        ),
+        RegisterUserView.as_view(),
         name='registration',
     ),
     path('logout/', LogoutView.as_view(
