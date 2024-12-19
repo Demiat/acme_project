@@ -6,10 +6,11 @@ from birthday.models import Birthday
 
 User = get_user_model()
 
+
 class Congratulation(models.Model):
     text = models.TextField('Текст поздравления')
     birthday = models.ForeignKey(
-        Birthday, 
+        Birthday,
         on_delete=models.CASCADE,
         related_name='congratulations',
     )
@@ -17,4 +18,4 @@ class Congratulation(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ('-created_at',)

@@ -1,8 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+from django.views.generic import CreateView
 
 from .forms import CongratulationForm
 from birthday.models import Birthday
+from comments.models import Congratulation
 
 
 @login_required
@@ -22,3 +26,24 @@ def add_comment(request, pk):
         congratulation.save()
     # Перенаправляем пользователя назад, на страницу дня рождения.
     return redirect('birthday:detail', pk=pk)
+
+
+class CongratulationCreateView(LoginRequiredMixin, CreateView):
+    birthday = None
+    model = Congratulation
+    form_class = CongratulationForm
+
+    # Переопределяем dispatch()
+    def dispatch(self, request, *args, **kwargs):
+        self.birthday = get_object_or_404(Birthday, pk=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    # Переопределяем form_valid()
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.birthday = self.birthday
+        return super().form_valid(form)
+
+    # Переопределяем get_success_url()
+    def get_success_url(self):
+        return reverse('birthday:detail', kwargs={'pk': self.birthday.pk}) 

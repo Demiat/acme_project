@@ -30,10 +30,10 @@
             <li class="nav-item">
               <a class="nav-link {% if view_name in 'login, auth_logout' %} active {% endif %}" href="{% url 'login' %}">Войти</a>
             </li>        
-          {% endif %}
           <li class="nav-item">
             <a class="nav-link{% if view_name == 'registration' %} active {% endif %}" href="{% url 'registration' %}">Регистрация</a>
           </li>
+          {% endif %}
         </ul>
       {% endwith %}
     </div>

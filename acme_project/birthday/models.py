@@ -7,6 +7,13 @@ from .validators import real_age
 User = get_user_model()
 
 
+class Tag(models.Model):
+    tag = models.CharField('Тег', max_length=20)
+
+    def __str__(self):
+        return self.tag
+
+
 class Birthday(models.Model):
     author = models.ForeignKey(
         User, verbose_name='Автор записи', on_delete=models.CASCADE, null=True
@@ -20,6 +27,12 @@ class Birthday(models.Model):
         validators=(real_age,)
     )
     image = models.ImageField('Фото', blank=True, upload_to='birthdays_images')
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name='Теги',
+        blank=True,
+        help_text='Удерживайте Ctrl для выбора нескольких вариантов'
+    )
 
     def get_absolute_url(self):
         # С помощью функции reverse() возвращаем URL объекта.

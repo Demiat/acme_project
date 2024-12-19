@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 
 from .models import Birthday
 from .forms import BirthdayForm
+from comments.forms import CongratulationForm
 from .utils import calculate_birthday_countdown
 from users.mixins import OnlyAuthorMixin
 
@@ -33,7 +34,8 @@ class BirthdayDetailView(DetailView):
             # Дату рождения берём из объекта в словаре context:
             self.object.birthday
         )
-        # Записываем в переменную form пустой объект формы.
+        # Записываем в переменную form пустой объект формы
+        # для получения формы в шаблоне
         context['form'] = CongratulationForm()
         # Запрашиваем все поздравления для выбранного дня рождения.
         context['congratulations'] = (
@@ -48,6 +50,10 @@ class BirthdayDetailView(DetailView):
 class BirthdayListView(ListView):
     # Указываем модель, с которой работает CBV...
     model = Birthday
+    # По умолчанию этот класс
+    # выполняет запрос queryset = Birthday.objects.all(),
+    # но мы его переопределим:
+    queryset = Birthday.objects.prefetch_related('tags')
     # ...сортировку, которая будет применена при выводе списка объектов:
     ordering = 'id'
     # ...и даже настройки пагинации:
